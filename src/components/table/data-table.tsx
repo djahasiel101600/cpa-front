@@ -35,11 +35,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  errorMsg: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  errorMsg,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -77,8 +79,10 @@ export function DataTable<TData, TValue>({
             <SelectValue placeholder={"Filter " + filterCol + "..."} />
           </SelectTrigger>
           <SelectContent>
-            {table.getAllColumns().map((col) => (
-              <SelectItem value={col.id}>{col.id}</SelectItem>
+            {table.getAllColumns().map((col, index) => (
+              <SelectItem key={index} value={col.id}>
+                {col.id}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -126,7 +130,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {errorMsg ? errorMsg : "No results"}
                 </TableCell>
               </TableRow>
             )}

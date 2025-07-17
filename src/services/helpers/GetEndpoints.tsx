@@ -3,12 +3,16 @@ import { axios_instance } from "../Api";
 
 export function UseEndpointData<T>(endpoint: string) {
   const [data, setData] = useState<T[]>([]);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    axios_instance.get<T[]>(endpoint).then((res) => {
-      setData(res.data);
-    });
+    axios_instance
+      .get<T[]>(endpoint)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => setErrorMsg(err.message));
   }, []);
 
-  return data;
+  return { data, errorMsg };
 }
