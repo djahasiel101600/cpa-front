@@ -2,6 +2,8 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
 
+import { type LiquidationShape } from "@/types/core-types";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,16 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-export interface LiquidationShape {
-  id: string;
-  transactionDate: Date;
-  checkNumber: number;
-  referenceJEV_DV: string;
-  expenseCode: number;
-  amountCashAdvance: number;
-  fund: string;
-}
 
 export const columnsLiquidation: ColumnDef<LiquidationShape>[] = [
   {

@@ -1,0 +1,56 @@
+export interface LiquidationShape {
+  id: string;
+  transactionDate: Date;
+  checkNumber: number;
+  referenceJEV_DV: string;
+  expenseCode: number;
+  amountCashAdvance: number;
+  fund: string;
+}
+
+export interface RciShape {
+  id: string;
+  dvNo: string;
+  checkDate: string;
+  payee: string;
+  natureOfTransaction: string;
+  amountNetOfTax: number;
+  grossAmount: number;
+  remarks: string;
+}
+
+export interface BrsShape {
+  id: string;
+  accountNumber: string;
+  office: string;
+}
+
+export interface OfficeShape {
+  id: string;
+  officeName: string;
+}
+
+export interface EmployeeShape {
+  id: string;
+  firstName: string;
+  lastname: string;
+  position: string;
+}
+
+export interface SupplierShape {
+  id: string;
+  supplierName: string;
+  supplierAddress: string;
+}
+
+export interface IARShape {
+  id: string;
+  iarNo: string;
+  iarDate: Date;
+  salesInvoiceNo: string;
+  dateInvoice: Date;
+  dateReceivedOfficer: Date;
+  dateAcceptance: Date;
+  dateInspection: Date;
+  dateReceivedCoa: Date;
+}

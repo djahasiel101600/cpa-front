@@ -2,6 +2,12 @@ import { IARSchema } from "../schema/IARSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
+import { UseEndpointData } from "@/services/helpers/GetEndpoints";
+import type {
+  EmployeeShape,
+  OfficeShape,
+  SupplierShape,
+} from "@/types/core-types";
 
 type FormData = z.infer<typeof IARSchema>;
 
@@ -17,6 +23,12 @@ export default function IARForm() {
   const onSubmit = (data: FormData) => {
     console.log(data);
   };
+
+  const { data: offices = [] } = UseEndpointData<OfficeShape>("core/office/");
+  const { data: employees = [] } =
+    UseEndpointData<EmployeeShape>("core/employee/");
+  const { data: suppliers = [] } =
+    UseEndpointData<SupplierShape>("core/supplier/");
 
   return (
     <>
@@ -38,7 +50,7 @@ export default function IARForm() {
               placeholder="0000-00-000"
             />
             {errors.iarNo && (
-              <p className="text-red-800">{errors.iarNo.message}</p>
+              <p className="text-red-500">{errors.iarNo.message}</p>
             )}
           </div>
           <div className="grid grid-flow-row grid-cols-4 gap-5">
@@ -78,7 +90,11 @@ export default function IARForm() {
                 {...register("supplier", { valueAsNumber: true })}
                 className="text-[16] focus:outline-0 focus:border-0"
               >
-                <option value={1}>Supplier 1</option>
+                {suppliers.map((supplier) => (
+                  <option key={supplier.id} value={supplier.id}>
+                    {supplier.supplierName}
+                  </option>
+                ))}
               </select>
               {errors.supplier && (
                 <p className="text-red-500">{errors.supplier.message}</p>
@@ -108,7 +124,9 @@ export default function IARForm() {
                 type="date"
                 className="appearance-none text-[16] focus:outline-0 focus:border-0"
               />
-              {errors.dateReceived && errors.dateReceived.message}
+              {errors.dateReceived && (
+                <p className="text-red-500">{errors.dateReceived.message}</p>
+              )}
             </div>
 
             <div className="flex flex-col bg-gray-50 px-3 pt-3 border-b-2 border-gray-300 rounded-xs">
@@ -120,7 +138,9 @@ export default function IARForm() {
                 type="date"
                 className="appearance-none text-[16] focus:outline-0 focus:border-0"
               />
-              {errors.dateAcceptance && errors.dateAcceptance.message}
+              {errors.dateAcceptance && (
+                <p className="text-red-500">{errors.dateAcceptance.message}</p>
+              )}
             </div>
 
             <div className="flex flex-col bg-gray-50 px-3 pt-3 border-b-2 border-gray-300 rounded-xs">
@@ -132,7 +152,9 @@ export default function IARForm() {
                 type="date"
                 className="appearance-none text-[16] focus:outline-0 focus:border-0"
               />
-              {errors.dateInspection && errors.dateInspection.message}
+              {errors.dateInspection && (
+                <p className="text-red-500">{errors.dateInspection.message}</p>
+              )}
             </div>
 
             <div className="flex flex-col bg-gray-50 px-3 pt-3 border-b-2 border-gray-300 rounded-xs">
@@ -144,7 +166,9 @@ export default function IARForm() {
                 type="text"
                 className="appearance-none text-[16] focus:outline-0 focus:border-0"
               />
-              {errors.salesInvoice && errors.salesInvoice.message}
+              {errors.salesInvoice && (
+                <p className="text-red-500">{errors.salesInvoice.message}</p>
+              )}
             </div>
 
             <div className="flex flex-col bg-gray-50 px-3 pt-3 border-b-2 border-gray-300 rounded-xs">
@@ -156,7 +180,9 @@ export default function IARForm() {
                 type="date"
                 className="appearance-none text-[16] focus:outline-0 focus:border-0"
               />
-              {errors.dateInvoice && errors.dateInvoice.message}
+              {errors.dateInvoice && (
+                <p className="text-red-500">{errors.dateInvoice.message}</p>
+              )}
             </div>
 
             <div className="flex flex-col bg-gray-50 px-3 pt-3 border-b-2 border-gray-300 rounded-xs">
@@ -167,9 +193,15 @@ export default function IARForm() {
                 {...register("receivedBy", { valueAsNumber: true })}
                 className="text-[16] focus:outline-0 focus:border-0"
               >
-                <option value="1">Employee 1</option>
+                {employees.map((employee) => (
+                  <option key={employee.id} value={employee.id}>
+                    {employee.firstName + " " + employee.lastname}
+                  </option>
+                ))}
               </select>
-              {errors.receivedBy && errors.receivedBy.message}
+              {errors.receivedBy && (
+                <p className="text-red-500">{errors.receivedBy.message}</p>
+              )}
             </div>
 
             <div className="flex flex-col bg-gray-50 px-3 pt-3 border-b-2 border-gray-300 rounded-xs">
@@ -180,9 +212,15 @@ export default function IARForm() {
                 {...register("submittedBy", { valueAsNumber: true })}
                 className="text-[16] focus:outline-0 focus:border-0"
               >
-                <option value="1">Employee 2</option>
+                {employees.map((employee) => (
+                  <option key={employee.id} value={employee.id}>
+                    {employee.firstName + " " + employee.lastname}
+                  </option>
+                ))}
               </select>
-              {errors.submittedBy && errors.submittedBy.message}
+              {errors.submittedBy && (
+                <p className="text-red-500">errors.submittedBy.message</p>
+              )}
             </div>
 
             <div className="flex flex-col bg-gray-50 px-3 pt-3 border-b-2 border-gray-300 rounded-xs">
@@ -193,12 +231,15 @@ export default function IARForm() {
                 {...register("office", { valueAsNumber: true })}
                 className="text-[16] focus:outline-0 focus:border-0"
               >
-                <option value="1">ADN ASDI IMO</option>
-                <option value="2">SDN ASDI IMO</option>
-                <option value="3">SDS ASDI IMO</option>
-                <option value="4">ADS ASDI IMO</option>
+                {offices.map((office) => (
+                  <option key={office.id} value={office.id}>
+                    {office.officeName}
+                  </option>
+                ))}
               </select>
-              {errors.office && errors.office.message}
+              {errors.office && (
+                <p className="text-red-500">{errors.office.message}</p>
+              )}
             </div>
           </div>
 

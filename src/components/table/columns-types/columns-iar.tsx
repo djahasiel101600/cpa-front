@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
 
-import { type BrsShape } from "@/types/core-types";
+import { type IARShape } from "@/types/core-types";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,33 +14,57 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const columnsBrs: ColumnDef<BrsShape>[] = [
+export const columnsIar: ColumnDef<IARShape>[] = [
   {
     accessorKey: "id",
-    header: "Check",
+    header: "ID",
   },
   {
-    accessorKey: "accountNumber",
+    accessorKey: "iarNo",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Account
+          IAR No.
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "office",
-    header: "Office",
+    accessorKey: "iarDate",
+    header: "IAR Date",
+  },
+  {
+    accessorKey: "salesInvoiceNo",
+    header: "Sales Invoice",
+  },
+  {
+    accessorKey: "dateInvoice",
+    header: "Invoice Date",
+  },
+  {
+    accessorKey: "dateReceivedOfficer",
+    header: "Date Received - Supply Officer",
+  },
+  {
+    accessorKey: "dateAcceptace",
+    header: "Date of Acceptance",
+  },
+  {
+    accessorKey: "dateInspection",
+    header: "Date Inspection",
+  },
+  {
+    accessorKey: "dateReceivedCoa",
+    header: "Date Received - COA Office",
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const brs = row.original;
+      const iar = row.original;
 
       return (
         <DropdownMenu>
@@ -53,9 +77,9 @@ export const columnsBrs: ColumnDef<BrsShape>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(brs.id)}
+              onClick={() => navigator.clipboard.writeText(iar.id)}
             >
-              Copy BRS ID
+              Copy IAR ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View account</DropdownMenuItem>

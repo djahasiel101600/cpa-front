@@ -1,6 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
+import { type RciShape } from "@/types/core-types";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,17 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-export interface RciShape {
-  id: string;
-  dvNo: string;
-  checkDate: string;
-  payee: string;
-  natureOfTransaction: string;
-  amountNetOfTax: number;
-  grossAmount: number;
-  remarks: string;
-}
 
 export const columnsRci: ColumnDef<RciShape>[] = [
   {
