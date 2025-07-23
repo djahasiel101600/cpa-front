@@ -12,6 +12,7 @@ import type { IARShape } from "@/types/core-types";
 import { columnsIar } from "@/components/table/columns-types/columns-iar";
 import Home from "./home";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import PageNotFound from "./PageNotFound";
 
 function PageRouter({
   isAuth,
@@ -25,9 +26,13 @@ function PageRouter({
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Home />} />
-        <Route path="iar-form" element={<ProtectedRoute isAuth={isAuth}><IARForm/></ProtectedRoute>} />
-        <Route path="login" element={!isAuth ? <LoginForm onLogin={onLogin}/> : <Home /> } />
+        {isAuth ? <Route path="iar-form" element={<IARForm/>} /> : <Route path="login" element={<LoginForm onLogin={onLogin}/> } />}
+        <Route element={<ProtectedRoute/>}>
+          <Route path="iar-form" element={<IARForm/>} />
+          <Route index element={<Home />} />
+          <Route path="iar-data" element={<DataTable columns={columnsIar} data={iarData} />} />
+        </Route>
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );

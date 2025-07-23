@@ -41,7 +41,7 @@ export default function LoginForm({onLogin}:{onLogin: (token: string) => void}) 
       .then((response) => {
         localStorage.setItem("authToken", response.data.token);
         onLogin(response.data.token);
-        navigate("/home/", { replace: true });
+        navigate("/", { replace: true });
       })
       .catch((error) => {
         console.log(error);

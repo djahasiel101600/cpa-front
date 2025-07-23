@@ -1,12 +1,9 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-interface ProtectedRouteProps {
-    isAuth: boolean;
-    children: React.ReactNode;
-}
 
-const ProtectedRoute = ({isAuth, children} : ProtectedRouteProps) => {
-    return isAuth ? <>{children}</> : <Navigate to={'/login'} replace />;  
+const ProtectedRoute = () => {
+    const isAuth = localStorage.getItem("authToken");
+    return isAuth ? <Outlet/> : <Navigate to={"/login/"} />;  
 }
 
 export default ProtectedRoute;
