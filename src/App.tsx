@@ -15,6 +15,11 @@ function App() {
     setIsAuth(authToken !== null);
   }, []);
 
-  return <PageRouter isAuth={isAuth} iarData={iarData} />;
+  const handleLogin = (token: string) => {
+    localStorage.setItem("authToken", token);
+    setIsAuth(true);
+  }
+
+  return <PageRouter isAuth={isAuth} iarData={iarData} onLogin={handleLogin} />;
 }
 export default App;

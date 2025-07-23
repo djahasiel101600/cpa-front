@@ -15,7 +15,7 @@ import { axios_instance } from "@/services/Api";
 import { useNavigate } from "react-router-dom";
 
 type FormData = z.infer<typeof AuthSchema>;
-export default function LoginForm() {
+export default function LoginForm({onLogin}:{onLogin: (token: string) => void}) {
   const navigate = useNavigate();
   const {
     register,
@@ -27,7 +27,7 @@ export default function LoginForm() {
   const onSubmit = (data: FormData) => {
     axios_instance
       .post(
-        "api-token-auth/",
+        "login/",
         {
           username: data.username,
           password: data.password,
@@ -36,19 +36,15 @@ export default function LoginForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          baseURL: "http://127.0.0.1:8000/",
         }
       )
       .then((response) => {
         localStorage.setItem("authToken", response.data.token);
+        onLogin(response.data.token);
+        navigate("/home/", { replace: true });
       })
       .catch((error) => {
         console.log(error);
-      })
-      .finally(() => {
-        if (localStorage.getItem("authToken") !== null) {
-          navigate("/iar/", { replace: true });
-        }
       });
   };
   return (
