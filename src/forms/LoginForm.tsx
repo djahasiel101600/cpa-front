@@ -41,10 +41,14 @@ export default function LoginForm() {
       )
       .then((response) => {
         localStorage.setItem("authToken", response.data.token);
-        navigate("/iar/");
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        if (localStorage.getItem("authToken") !== null) {
+          navigate("/iar/", { replace: true });
+        }
       });
   };
   return (

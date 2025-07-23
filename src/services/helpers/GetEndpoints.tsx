@@ -17,9 +17,7 @@ export function UseEndpointData<T>(endpoint: string) {
         setData(res.data);
       })
       .catch((err) => {
-        if (err.status === 401) {
-          setError("Unauthorized");
-        }
+        setError(err.message);
       });
   }, []);
 
