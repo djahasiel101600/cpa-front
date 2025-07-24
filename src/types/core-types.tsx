@@ -54,3 +54,25 @@ export interface IARShape {
   dateInspection: Date;
   dateReceivedCoa: Date;
 }
+
+export interface ErrorShape {
+  message: string;
+  name: string;
+  response?: {
+    status: number;
+    data: any;
+    headers: any;
+    config: any;
+  };
+  config: any;
+  isAxiosError: true;
+}
+
+export interface AccountOptionShape {
+  option: "account-options" | "profile" | "logout";
+}
+
+export interface UserShape {
+  username: string;
+  email: string;
+}

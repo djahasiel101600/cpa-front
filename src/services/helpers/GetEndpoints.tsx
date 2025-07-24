@@ -1,25 +1,40 @@
 import { useEffect, useState } from "react";
 import { axios_instance } from "../Api";
 
-export function UseEndpointData<T>(endpoint: string) {
-  const authToken = localStorage.getItem("authToken");
+interface ErrorShape {
+  message: string;
+  name: string;
+  response?: {
+    status: number;
+    data: any;
+    headers: any;
+    config: any;
+  };
+  config: any;
+  isAxiosError: true;
+}
+
+export function UseGetEndpointData<T>(endpoint: string, criteria: boolean) {
   const [data, setData] = useState<T[]>([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<ErrorShape>();
 
   useEffect(() => {
-    axios_instance
-      .get<T[]>(endpoint, {
-        headers: {
-          Authorization: `Token ${authToken}`,
-        },
-      })
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => {
-        setError(err.message);
-      });
+    const authToken = localStorage.getItem("authToken");
+    if (criteria === true) {
+      axios_instance
+        .get<T[]>(endpoint, {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        })
+        .then((res) => {
+          setData(res.data);
+        })
+        .catch((err) => {
+          setError(err as ErrorShape);
+        });
+    }
   }, []);
 
-  return { data, error };
+  return { data, error, criteria };
 }

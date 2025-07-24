@@ -13,9 +13,14 @@ import { axios_instance } from "@/services/Api";
 
 // Navigation to Pages
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 type FormData = z.infer<typeof AuthSchema>;
-export default function LoginForm({onLogin}:{onLogin: (token: string) => void}) {
+export default function LoginForm({
+  onLogin,
+}: {
+  onLogin: (token: string) => void;
+}) {
   const navigate = useNavigate();
   const {
     register,
@@ -23,7 +28,6 @@ export default function LoginForm({onLogin}:{onLogin: (token: string) => void}) 
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(AuthSchema) });
 
-  //   const [authenticated, setAuthenticated] = useState(false);
   const onSubmit = (data: FormData) => {
     axios_instance
       .post(
@@ -84,6 +88,9 @@ export default function LoginForm({onLogin}:{onLogin: (token: string) => void}) 
               <p className="text-red-600 text-sm">{errors.password.message}.</p>
             )}
             <Button>Login</Button>
+            <p className="underline underline-offset-2 cursor-pointer w-fit">
+              Create an <span className="font-medium">account</span>.
+            </p>
           </div>
           <div className="hidden md:w-[45%] xl:w-[30%] 2xl:w-[25%] md:bg-black md:border-y-1 md:border-r-1 md:rounded-r-sm md:flex md:justify-center md:items-center">
             <IoLogoBuffer className="text-9xl text-white" />
