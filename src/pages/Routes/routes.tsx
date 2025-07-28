@@ -17,16 +17,14 @@ import { useEffect } from "react";
 
 function PageRouter({
   isAuth,
-  onLogin,
 }: {
   isAuth: boolean | undefined;
-  onLogin: (token: string) => void;
 }) {
   console.log('IsAuth', isAuth)
   return (
     <BrowserRouter>
       <Routes>
-        {isAuth && isAuth !== undefined ? (
+        {isAuth ? (
           <Route element={<Navigate to={"/"} replace />} />
         ) : (
           <Route path="login" element={"Login"} />

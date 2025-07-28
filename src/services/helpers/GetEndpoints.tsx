@@ -19,22 +19,24 @@ export function UseGetEndpointData<T>(endpoint: string, criteria: boolean | unde
   const [error, setError] = useState<ErrorShape>();
 
   useEffect(() => {
-    const authToken = localStorage.getItem("authToken");
+    const fetchData = async () => {
+      const authToken = localStorage.getItem("authToken");
     if (criteria === true) {
-      axios_instance
+      try {
+        const res = await axios_instance
         .get<T[]>(endpoint, {
           headers: {
             Authorization: `Token ${authToken}`,
           },
         })
-        .then((res) => {
-          setData(res.data);
-        })
-        .catch((err) => {
-          setError(err as ErrorShape);
-        });
+        setData(res.data)
+      } catch (error:any) {
+        setError(error);
+      }
     }
-  }, []);
+    }
+    fetchData();
+  }, [criteria, endpoint]);
 
   return { data, error, criteria };
 }

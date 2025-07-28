@@ -3,22 +3,16 @@ import { useEffect, useState } from "react";
 import { UseGetEndpointData } from "./services/helpers/GetEndpoints";
 
 function App() {
-  const [isAuth, setIsAuth] = useState<boolean | undefined>();
-  const { error } = UseGetEndpointData("verify-token/", isAuth);
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const { error, data } = UseGetEndpointData("verify-token/", isAuth);
+  const token = localStorage.getItem("authToken");
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      setIsAuth(error?.response?.status === undefined ? true : false);
-      console.log(isAuth)
-    }
-  }, [error, isAuth]);
+  if (error) {
+    console.log(error.message)
+  } else {
+    console.log(data)
+  }
 
-  const handleLogin = () => {
-    const { error } = UseGetEndpointData("verify-token/", isAuth);
-    setIsAuth(error?.response?.status === undefined ? true : false);
-  };
-
-  return <PageRouter isAuth={isAuth} onLogin={handleLogin} />;
+  return <PageRouter isAuth={isAuth} />;
 }
 export default App;
