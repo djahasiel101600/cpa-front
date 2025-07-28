@@ -17,11 +17,12 @@ import {
 function Logout({ dialogState }: { dialogState: boolean }) {
   const navigate = useNavigate();
   const [isLoggingOut, setLoggingOut] = useState(false);
-  const { status, error } = UsePostEndpoint("logout/", isLoggingOut);
+  const { status, error } = UsePostEndpoint("logout/", isLoggingOut, true);
   const [openState, setOpenState] = useState<boolean>(dialogState);
 
   useEffect(() => {
     if (isLoggingOut) {
+      console.log(status);
       if (status === 201) {
         navigate("/login");
         localStorage.removeItem("authToken");

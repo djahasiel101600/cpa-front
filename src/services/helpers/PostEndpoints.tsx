@@ -4,6 +4,7 @@ import { type ErrorShape } from "@/types/core-types";
 
 export default function UsePostEndpoint<T>(
   endpoint: string,
+  postData: any | null,
   criteria?: boolean | null
 ) {
   const [error, setError] = useState<ErrorShape>();
@@ -14,7 +15,7 @@ export default function UsePostEndpoint<T>(
     const authToken = localStorage.getItem("authToken");
     if ((criteria || criteria === null) && authToken !== "") {
       axios_instance
-        .post(endpoint, null, {
+        .post(endpoint, postData, {
           headers: {
             Authorization: `Token ${authToken}`,
           },
@@ -22,9 +23,11 @@ export default function UsePostEndpoint<T>(
         .then((response) => {
           setData(response.data);
           setStatus(response.status);
+          console.log(response.status);
         })
         .catch((err) => {
           setError(err as ErrorShape);
+          console.log(err);
         });
     }
   }, [criteria, endpoint]);

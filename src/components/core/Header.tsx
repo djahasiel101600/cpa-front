@@ -3,7 +3,7 @@ import { SiDwavesystems } from "react-icons/si";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import type { AccountOptionShape, UserShape } from "@/types/core-types";
+import type { AccountOptionShape } from "@/types/core-types";
 
 import {
   NavigationMenu,
@@ -16,13 +16,7 @@ import {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { User } from "@/services/RetrieveUser/User";
 import { UseGetEndpointData } from "@/services/helpers/GetEndpoints";
-
-interface LinkShape {
-  address: string;
-  title: string;
-}
 
 const inboundLinks = [
   {
@@ -93,7 +87,9 @@ export default function Header() {
               value={selection.option}
               className="w-full focus:outline-0"
               onChange={(e) => {
-                setSelection({ option: e.target.value } as AccountOptionShape);
+                setSelection({
+                  option: e.target.value,
+                } as AccountOptionShape);
               }}
             >
               <option value="account-options">Account Options</option>
@@ -103,16 +99,16 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <NavigationMenu viewport={false}>
+      <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem asChild className={navigationMenuTriggerStyle()}>
             <NavigationMenuLink asChild>
-              <Link to={"#"}>Home</Link>
+              <Link to={"/"}>Home</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem asChild className={navigationMenuTriggerStyle()}>
             <NavigationMenuLink asChild>
-              <Link to={"#"}>Report of Check Issued</Link>
+              <Link to={"rci"}>Report of Check Issued</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
 
@@ -123,9 +119,11 @@ export default function Header() {
                 {inboundLinks.map((link, idx) => (
                   <li
                     key={idx}
-                    className="font-medium text-[14px] hover:bg-gray-100 p-2 rounded-sm"
+                    className="font-medium text-[14px] hover:bg-gray-100 rounded-sm"
                   >
-                    {link.title}
+                    <NavigationMenuLink>
+                      <Link to={link.address}>{link.title}</Link>
+                    </NavigationMenuLink>
                   </li>
                 ))}
               </ul>
@@ -138,6 +136,8 @@ export default function Header() {
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
+        <NavigationMenuIndicator />
+        <NavigationMenuViewport />
       </NavigationMenu>
     </nav>
   );

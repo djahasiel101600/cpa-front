@@ -14,8 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { useNavigate } from "react-router-dom";
-
 export const columnsIar: ColumnDef<IARShape>[] = [
   {
     accessorKey: "id",
@@ -36,11 +34,6 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     },
   },
   {
-    accessorFn: (row) => row.supplier.supplierName,
-    id: "supplier",
-    header: "Supplier",
-  },
-  {
     accessorKey: "iarDate",
     header: "IAR Date",
   },
@@ -57,7 +50,7 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     header: "Date Received - Supply Officer",
   },
   {
-    accessorKey: "dateAcceptance",
+    accessorKey: "dateAcceptace",
     header: "Date of Acceptance",
   },
   {
@@ -69,31 +62,9 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     header: "Date Received - COA Office",
   },
   {
-    accessorFn: (row) =>
-      row.receivedBy.firstName + " " + row.receivedBy.lastname,
-    id: "receivedBy",
-    header: "Received By",
-  },
-  {
-    accessorFn: (row) =>
-      row.submittedBy.firstName + " " + row.submittedBy.lastname,
-    id: "submittedBy",
-    header: "Submitted By",
-  },
-  {
-    accessorFn: (row) => row.office.officeName,
-    id: "office",
-    header: "Office",
-  },
-  {
-    accessorKey: "remarks",
-    header: "Remarks",
-  },
-  {
     id: "actions",
     cell: ({ row }) => {
       const iar = row.original;
-      const navigate = useNavigate();
 
       return (
         <DropdownMenu>
@@ -111,9 +82,7 @@ export const columnsIar: ColumnDef<IARShape>[] = [
               Copy IAR ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate(`${iar.id}`)}>
-              View transaction
-            </DropdownMenuItem>
+            <DropdownMenuItem>View account</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

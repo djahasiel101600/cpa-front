@@ -28,6 +28,7 @@ export interface BrsShape {
 export interface OfficeShape {
   id: string;
   officeName: string;
+  officeAgency: { id: string; agencyName: string; address: string };
 }
 
 export interface EmployeeShape {
@@ -46,6 +47,7 @@ export interface SupplierShape {
 export interface IARShape {
   id: string;
   iarNo: string;
+  supplier: SupplierShape;
   iarDate: Date;
   salesInvoiceNo: string;
   dateInvoice: Date;
@@ -53,6 +55,10 @@ export interface IARShape {
   dateAcceptance: Date;
   dateInspection: Date;
   dateReceivedCoa: Date;
+  receivedBy: EmployeeShape;
+  submittedBy: EmployeeShape;
+  office: OfficeShape;
+  remarks: string;
 }
 
 export interface ErrorShape {

@@ -9,6 +9,10 @@ import PO from "../PO";
 import Logout from "../Auth/Form/Logout";
 import Profile from "../Auth/Profile";
 
+import { default as RCI } from "@/pages/RCI";
+import IARForm from "../IAR/Forms/IARForm";
+import IARDataSingleView from "../IAR/DataView/IARDataSingleView";
+
 function PageRouter({
   isAuth,
   onLogin,
@@ -27,11 +31,15 @@ function PageRouter({
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route index element={<Home />} />
-            <Route index element={<IAR />} />
-            <Route index element={<PO />} />
+            <Route path="rci" element={<RCI />} />
+            <Route path="iar" element={<IAR />} />
+            <Route path="iar-form" element={<IARForm />} />
+            <Route path="iar/:id" element={<IARDataSingleView />} />
+            <Route path="po" element={<PO />} />
             <Route path="profile" element={<Profile />} />
             <Route path="login" element={<Navigate to={"/"} replace />} />
             <Route path="logout" element={<Logout dialogState={true} />} />
+            <Route path="*" element={<PageNotFound />} />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />
