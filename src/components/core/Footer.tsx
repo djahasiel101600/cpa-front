@@ -18,12 +18,11 @@ function Footer() {
             </div>
           </div>
           <div className="grow flex flex-col text-center border-gray-600/5 border-x-2 py-4 px-8">
-            <h1>Componentity</h1>
+            <h1>Colossians 3:23-24 (NIV)</h1>
             <div className="text-lg font-normal text-gray-500">
-              <p>
-                Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
-                <br />
-                consectetur, adipisci velit...
+              <p className="">
+              Whatever you do, work at it with all your heart, as working for the Lord,<br /> not for human masters,
+              since you know that you will receive an inheritance from the Lord as a reward. <br />It is the Lord Christ you are serving.
               </p>
             </div>
           </div>

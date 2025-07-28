@@ -10,7 +10,7 @@ interface Props {
 const IARDataSingleView = () => {
   const { id } = useParams<keyof Props>() as Props;
   const { data, error } = UseGetEndpointData<IARShape>(
-    `inspection-acceptance-report/${id}/`,
+    `iar/inspection-acceptance-report/${id}/`,
     true
   );
   const [iarData, setIarData] = useState<IARShape[]>([]);
@@ -23,7 +23,7 @@ const IARDataSingleView = () => {
   return (
     <div>
       IARDataSingleView: {id}
-      <IARForm />
+      <IARForm onSuccess={(status) => console.log(status)} />
     </div>
   );
 };

@@ -121,8 +121,8 @@ export default function Header() {
                     key={idx}
                     className="font-medium text-[14px] hover:bg-gray-100 rounded-sm"
                   >
-                    <NavigationMenuLink>
-                      <Link to={link.address}>{link.title}</Link>
+                    <NavigationMenuLink href={link.address}>
+                      {link.title}
                     </NavigationMenuLink>
                   </li>
                 ))}
