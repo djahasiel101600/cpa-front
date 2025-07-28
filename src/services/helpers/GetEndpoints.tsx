@@ -14,7 +14,7 @@ interface ErrorShape {
   isAxiosError: true;
 }
 
-export function UseGetEndpointData<T>(endpoint: string, criteria: boolean) {
+export function UseGetEndpointData<T>(endpoint: string, criteria: boolean | undefined) {
   const [data, setData] = useState<T[]>([]);
   const [error, setError] = useState<ErrorShape>();
 

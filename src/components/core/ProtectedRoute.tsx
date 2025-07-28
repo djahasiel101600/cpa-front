@@ -7,8 +7,9 @@ const ProtectedRoute = () => {
   const { error } = UseGetEndpointData("verify-token/", true);
   useEffect(() => {
     setStatusCode(error?.response?.status);
+    console.log(statusCode);
   }, [error]);
-  return statusCode !== 401 ? <Outlet /> : <Navigate to={"/login/"} />;
+  return statusCode === undefined ? <Outlet /> : <Navigate to={"/login/"} />;
 };
 
 export default ProtectedRoute;
