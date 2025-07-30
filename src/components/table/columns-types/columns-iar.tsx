@@ -36,8 +36,7 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     },
   },
   {
-    accessorFn: (row) => row.supplier.supplierName,
-    id: "supplier",
+    accessorKey: "supplier",
     header: "Supplier",
   },
   {
@@ -52,37 +51,32 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     accessorKey: "dateInvoice",
     header: "Invoice Date",
   },
-  {
-    accessorKey: "dateReceivedOfficer",
-    header: "Date Received - Supply Officer",
-  },
-  {
-    accessorKey: "dateAcceptance",
-    header: "Date of Acceptance",
-  },
-  {
-    accessorKey: "dateInspection",
-    header: "Date Inspection",
-  },
+  // {
+  //   accessorKey: "dateReceivedOfficer",
+  //   header: "Date Received - Supply Officer",
+  // },
+  // {
+  //   accessorKey: "dateAcceptance",
+  //   header: "Date of Acceptance",
+  // },
+  // {
+  //   accessorKey: "dateInspection",
+  //   header: "Date Inspection",
+  // },
   {
     accessorKey: "dateReceivedCoa",
     header: "Date Received - COA Office",
   },
   {
-    accessorFn: (row) =>
-      row.receivedBy.firstName + " " + row.receivedBy.lastname,
-    id: "receivedBy",
+    accessorKey: "receivedBy",
     header: "Received By",
   },
   {
-    accessorFn: (row) =>
-      row.submittedBy.firstName + " " + row.submittedBy.lastname,
-    id: "submittedBy",
+    accessorKey: "submittedBy",
     header: "Submitted By",
   },
   {
-    accessorFn: (row) => row.office.officeName,
-    id: "office",
+    accessorKey: "office",
     header: "Office",
   },
   {

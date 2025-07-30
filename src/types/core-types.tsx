@@ -47,7 +47,7 @@ export interface SupplierShape {
 export interface IARShape {
   id: string;
   iarNo: string;
-  supplier: SupplierShape;
+  supplier: string;
   iarDate: Date;
   salesInvoiceNo: string;
   dateInvoice: Date;
@@ -55,9 +55,9 @@ export interface IARShape {
   dateAcceptance: Date;
   dateInspection: Date;
   dateReceivedCoa: Date;
-  receivedBy: EmployeeShape;
-  submittedBy: EmployeeShape;
-  office: OfficeShape;
+  receivedBy: string;
+  submittedBy: string;
+  office: string;
   remarks: string;
 }
 
