@@ -32,7 +32,9 @@ export function UseGetEndpointData<T>(
             Authorization: `Token ${authToken}`,
           },
         })
-        .then((res) => setData(res.data))
+        .then((res) => {
+          setData(res.data);
+        })
         .catch((err) => {
           setError(err as ErrorShape);
           console.log("Something went wrong: ", error);

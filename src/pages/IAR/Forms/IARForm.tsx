@@ -28,14 +28,20 @@ import type {
 import UsePostEndpoint from "@/services/helpers/PostEndpoints";
 import { useEffect, useState } from "react";
 
+// Icons Imports
 import { FcInspection } from "react-icons/fc";
+import { IoMdPersonAdd } from "react-icons/io";
+import { MdAddHomeWork } from "react-icons/md";
+import { MdOutlineAddBusiness } from "react-icons/md";
+
 
 type FormData = z.infer<typeof IARSchema>;
 interface Props {
   onSuccess: (isCreated: boolean | false) => void;
+  defaultValues?: Partial<FormData>;
 }
 
-export default function IARForm({ onSuccess }: Props) {
+export default function IARForm({ onSuccess, defaultValues }: Props) {
   const {
     register,
     handleSubmit,
@@ -44,7 +50,7 @@ export default function IARForm({ onSuccess }: Props) {
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(IARSchema),
-    defaultValues: {
+    defaultValues:defaultValues || {
       supplier: "",
       dateReceivedOfficer: "",
       dateAcceptance: "",
@@ -77,6 +83,9 @@ export default function IARForm({ onSuccess }: Props) {
   };
 
   useEffect(() => {
+    if (!isPosting) {
+      return
+    }
     if (status === 201) {
       console.log("There are no errors");
       console.log("Data from success post: ", data);
@@ -95,7 +104,7 @@ export default function IARForm({ onSuccess }: Props) {
       onSuccess(false);
       toast("An error has occured while saving.", { position: "top-center" });
     }
-  }, [data, error]);
+  }, [data, error, status]);
 
   const { data: offices = [] } = UseGetEndpointData<OfficeShape>(
     "core/office/",
@@ -160,27 +169,30 @@ export default function IARForm({ onSuccess }: Props) {
                 <p className="text-red-500">{errors.supplier.message}</p>
               )}
             </label>
-            <Controller
-              name="supplier"
-              control={control}
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Supplier" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Supplier</SelectLabel>
-                      {suppliers.map((supplier) => (
-                        <SelectItem key={supplier.id} value={supplier.id}>
-                          {supplier.supplierName}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            />
+            <div className="flex gap-2 items-center justify-center">
+              <Controller
+                name="supplier"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Supplier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Supplier</SelectLabel>
+                        {suppliers.map((supplier) => (
+                          <SelectItem key={supplier.id} value={supplier.id}>
+                            {supplier.supplierName}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <MdOutlineAddBusiness className="text-2xl cursor-pointer" />
+            </div>
           </div>
 
           <div className="flex flex-col flex-wrap gap">
@@ -328,27 +340,30 @@ export default function IARForm({ onSuccess }: Props) {
                     <p className="text-red-500">{errors.submittedBy.message}</p>
                   )}
                 </label>
-                <Controller
-                  name="submittedBy"
-                  control={control}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Submitted by" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Submitted by</SelectLabel>
-                          {employees.map((employee) => (
-                            <SelectItem key={employee.id} value={employee.id}>
-                              {employee.firstName + " " + employee.lastname}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
+                <div className="flex gap-2 items-center justify-center">
+                  <Controller
+                    name="submittedBy"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Submitted by" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Submitted by</SelectLabel>
+                            {employees.map((employee) => (
+                              <SelectItem key={employee.id} value={employee.id}>
+                                {employee.firstName + " " + employee.lastname}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  <IoMdPersonAdd className="text-2xl cursor-pointer" />
+                </div>
               </div>
             </div>
             <div className="flex flex-col justify-center gap-2 mt-4">
@@ -358,29 +373,32 @@ export default function IARForm({ onSuccess }: Props) {
                   <p className="text-red-500">{errors.office.message}</p>
                 )}
               </label>
-              <Controller
-                name="office"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Office" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Office</SelectLabel>
-                        {offices.map((office) => (
-                          <SelectItem key={office.id} value={office.id}>
-                            {office.officeName +
-                              " - " +
-                              office.officeAgency.agencyName}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+              <div className="flex gap-2 justify-center items-center">
+                <Controller
+                  name="office"
+                  control={control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Office" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Office</SelectLabel>
+                          {offices.map((office) => (
+                            <SelectItem key={office.id} value={office.id}>
+                              {office.officeName +
+                                " - " +
+                                office.officeAgency.agencyName}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                <MdAddHomeWork className="text-2xl cursor-pointer" />
+              </div>
             </div>
             <div className="flex flex-col justify-center gap-2 align-bottom mt-4">
               <label className="text-[12px] font-medium text-gray-600">

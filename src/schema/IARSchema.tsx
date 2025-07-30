@@ -9,7 +9,7 @@ export const IARSchema = z.object({
   dateReceivedOfficer: z.string().min(1, { message: "This field is required" }),
   dateAcceptance: z.string().min(1, { message: "This field is required" }),
   salesInvoiceNo: z.string(),
-  dateInvoice: z.string().min(1, { message: "This field is required" }),
+  dateInvoice: z.string(),
   dateInspection: z.string().min(1, { message: "This field is required" }),
   receivedBy: z.string().min(1, "This field is required"),
   submittedBy: z.string().min(1, { message: "This field is required" }),

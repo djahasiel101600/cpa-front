@@ -47,17 +47,20 @@ export interface SupplierShape {
 export interface IARShape {
   id: string;
   iarNo: string;
-  supplier: string;
-  iarDate: Date;
+  supplier: string ;
+  iarDate: string;
   salesInvoiceNo: string;
-  dateInvoice: Date;
-  dateReceivedOfficer: Date;
-  dateAcceptance: Date;
-  dateInspection: Date;
-  dateReceivedCoa: Date;
+  dateInvoice: string;
+  dateReceivedOfficer: string;
+  dateAcceptance: string;
+  dateInspection: string;
+  dateReceivedCoa: string;
   receivedBy: string;
   submittedBy: string;
-  office: string;
+  supplier_details: SupplierShape;
+  receivedBy_details: EmployeeShape;
+  submittedBy_details: EmployeeShape;
+  office_details: OfficeShape;
   remarks: string;
 }
 

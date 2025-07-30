@@ -36,7 +36,8 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     },
   },
   {
-    accessorKey: "supplier",
+    accessorFn: row => row.supplier_details.supplierName,
+    id:'supplier',
     header: "Supplier",
   },
   {
@@ -68,15 +69,18 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     header: "Date Received - COA Office",
   },
   {
-    accessorKey: "receivedBy",
+    accessorFn: row => row.receivedBy_details.firstName,
+    id: "receivedBy",
     header: "Received By",
   },
   {
-    accessorKey: "submittedBy",
+    accessorFn: row => row.submittedBy_details.firstName,
+    id: "submittedBy",
     header: "Submitted By",
   },
   {
-    accessorKey: "office",
+    accessorFn: row => `${row.office_details.officeName} - ${row.office_details.officeAgency.agencyName}` ,
+    id: "office",
     header: "Office",
   },
   {
