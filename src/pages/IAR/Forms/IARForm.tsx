@@ -22,6 +22,7 @@ import {
 
 import type {
   EmployeeShape,
+  IARShape,
   OfficeShape,
   SupplierShape,
 } from "@/types/core-types";
@@ -33,15 +34,16 @@ import { FcInspection } from "react-icons/fc";
 import { IoMdPersonAdd } from "react-icons/io";
 import { MdAddHomeWork } from "react-icons/md";
 import { MdOutlineAddBusiness } from "react-icons/md";
-
+import UsePatchEndpoint from "@/services/helpers/PatchEndpoint";
 
 type FormData = z.infer<typeof IARSchema>;
 interface Props {
   onSuccess: (isCreated: boolean | false) => void;
-  defaultValues?: Partial<FormData>;
+  defaultValues?: IARShape;
+  iarID?: string;
 }
 
-export default function IARForm({ onSuccess, defaultValues }: Props) {
+export default function IARForm({ onSuccess, defaultValues, iarID }: Props) {
   const {
     register,
     handleSubmit,
@@ -50,16 +52,32 @@ export default function IARForm({ onSuccess, defaultValues }: Props) {
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(IARSchema),
-    defaultValues:defaultValues || {
-      supplier: "",
-      dateReceivedOfficer: "",
-      dateAcceptance: "",
-      dateInspection: "",
-      dateInvoice: "",
-      receivedBy: "",
-      submittedBy: "",
-      office: "",
-    },
+    defaultValues: defaultValues
+      ? {
+          iarNo: defaultValues.iarNo,
+          supplier: defaultValues.supplier,
+          iarDate: defaultValues.iarDate,
+          salesInvoiceNo: defaultValues.salesInvoiceNo,
+          dateInvoice: defaultValues.dateInvoice,
+          dateReceivedOfficer: defaultValues.dateReceivedOfficer,
+          dateAcceptance: defaultValues.dateAcceptance,
+          dateInspection: defaultValues.dateInspection,
+          dateReceivedCoa: defaultValues.dateReceivedCoa,
+          receivedBy: defaultValues.receivedBy,
+          submittedBy: defaultValues.submittedBy,
+          office: defaultValues.office,
+          remarks: defaultValues.remarks,
+        }
+      : {
+          supplier: "",
+          dateReceivedOfficer: "",
+          dateAcceptance: "",
+          dateInspection: "",
+          dateInvoice: "",
+          receivedBy: "",
+          submittedBy: "",
+          office: "",
+        },
   });
 
   const today = new Date();
@@ -68,15 +86,15 @@ export default function IARForm({ onSuccess, defaultValues }: Props) {
   const day = String(today.getDate()).padStart(2, "0");
   const defaultDate = `${year}-${month}-${day}`;
 
-  const [iarDates, setIarDate] = useState("");
-
   const [isPosting, setIsPosting] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>();
-  const { data, error, status } = UsePostEndpoint(
-    "iar/inspection-acceptance-report/",
-    formData,
-    isPosting
-  );
+  const { data, error, status } = iarID
+    ? UsePatchEndpoint(
+        `iar/inspection-acceptance-report/${iarID}/`,
+        formData,
+        isPosting
+      )
+    : UsePostEndpoint("iar/inspection-acceptance-report/", formData, isPosting);
   const onSubmit = (formData: FormData) => {
     setFormData(formData);
     setIsPosting(true);
@@ -84,14 +102,13 @@ export default function IARForm({ onSuccess, defaultValues }: Props) {
 
   useEffect(() => {
     if (!isPosting) {
-      return
+      return;
     }
     if (status === 201) {
-      console.log("There are no errors");
-      console.log("Data from success post: ", data);
+      const date = new Date();
       onSuccess(true);
       toast("Entry saved successfully", {
-        description: Date.now().toString(),
+        description: `${date.getUTCMonth} ${date.getUTCDate}, ${date.getFullYear} ${date.getHours}:${date.getMinutes}:${date.getSeconds}`,
         action: {
           label: "Close",
           onClick: () => console.log("Closed"),
@@ -100,7 +117,6 @@ export default function IARForm({ onSuccess, defaultValues }: Props) {
       });
       reset();
     } else {
-      console.log("An error has occured while saving");
       onSuccess(false);
       toast("An error has occured while saving.", { position: "top-center" });
     }
@@ -121,6 +137,7 @@ export default function IARForm({ onSuccess, defaultValues }: Props) {
 
   return (
     <>
+      {iarID}
       <form
         className="flex flex-col gap-3 items-center mx-8"
         onSubmit={handleSubmit(onSubmit)}
@@ -158,6 +175,9 @@ export default function IARForm({ onSuccess, defaultValues }: Props) {
                 {...register("dateReceivedCoa")}
                 type="datetime-local"
                 className="appearance-none text-[16] focus:outline-0  focus:border-b-black focus:border-0 w-fit"
+                defaultValue={
+                  defaultValues ? defaultValues.dateReceivedCoa : undefined
+                }
               />
             </div>
           </div>
@@ -345,7 +365,10 @@ export default function IARForm({ onSuccess, defaultValues }: Props) {
                     name="submittedBy"
                     control={control}
                     render={({ field }) => (
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Submitted by" />
                         </SelectTrigger>
@@ -386,7 +409,10 @@ export default function IARForm({ onSuccess, defaultValues }: Props) {
                         <SelectGroup>
                           <SelectLabel>Office</SelectLabel>
                           {offices.map((office) => (
-                            <SelectItem key={office.id} value={office.id}>
+                            <SelectItem
+                              key={office.id}
+                              value={String(office.id)}
+                            >
                               {office.officeName +
                                 " - " +
                                 office.officeAgency.agencyName}

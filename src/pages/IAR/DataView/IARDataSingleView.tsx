@@ -3,36 +3,57 @@ import { UseGetEndpointData } from "@/services/helpers/GetEndpoints";
 import { useEffect, useState } from "react";
 import type { IARShape } from "@/types/core-types";
 import IARForm from "../Forms/IARForm";
-import z from "zod";
-import type { IARSchema } from "@/schema/IARSchema";
+import { axios_instance } from "@/services/Api";
 
 interface Props {
   id: string;
 }
 const IARDataSingleView = () => {
   const { id } = useParams<keyof Props>() as Props;
-  const { data, isLoading } = UseGetEndpointData<IARShape>(
-    `iar/inspection-acceptance-report/${id}/`,
-    true
-  );
 
-  type FormData = z.infer<typeof IARSchema>
-  const [iarData, setIarData] = useState<IARShape[]>([]);
-  const [defaultValues, setDefaultValues] = useState<FormData>()
+  const [defaultValues, setDefaultValues] = useState<IARShape>();
+  const authToken = localStorage.getItem("authToken");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!isLoading) {
-      console.log("raw data::: ", data)
-    }
-    
-  }, [isLoading]);
+    setIsLoading(true);
+    axios_instance
+      .get(`iar/inspection-acceptance-report/${id}/`, {
+        headers: {
+          Authorization: `Token ${authToken}`,
+        },
+      })
+      .then((res) => {
+        setDefaultValues(res.data);
+        console.log(res.data);
+      })
+      .finally(() => setIsLoading(false));
+  }, [authToken]);
 
-  
-  return (
+  return !isLoading ? (
     <div>
-      IARDataSingleView: {id}
-      <IARForm onSuccess={(status) => console.log(status)} defaultValues={{}}/>
+      <IARForm
+        onSuccess={(status) => console.log(status)}
+        defaultValues={{
+          iarNo: defaultValues?.iarNo ?? "",
+          supplier: defaultValues?.supplier ?? "",
+          iarDate: defaultValues?.iarDate ?? "",
+          salesInvoiceNo: defaultValues?.salesInvoiceNo ?? "",
+          dateInvoice: defaultValues?.dateInvoice ?? "",
+          dateReceivedOfficer: defaultValues?.dateReceivedOfficer ?? "",
+          dateAcceptance: defaultValues?.dateAcceptance ?? "",
+          dateInspection: defaultValues?.dateInspection ?? "",
+          dateReceivedCoa: defaultValues?.dateReceivedCoa ?? "",
+          receivedBy: defaultValues?.receivedBy ?? "",
+          submittedBy: defaultValues?.submittedBy ?? "",
+          office: defaultValues?.office ?? "",
+          remarks: defaultValues?.remarks ?? "",
+        }}
+        iarID={id}
+      />
     </div>
+  ) : (
+    "loading..."
   );
 };
 

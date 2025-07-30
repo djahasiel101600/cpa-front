@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useNavigate } from "react-router-dom";
+import UsePatchEndpoint from "@/services/helpers/PatchEndpoint";
+import UseDeleteEndpoint from "@/services/helpers/DeleteEndpoint";
 
 export const columnsIar: ColumnDef<IARShape>[] = [
   {
@@ -36,8 +38,8 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     },
   },
   {
-    accessorFn: row => row.supplier_details.supplierName,
-    id:'supplier',
+    accessorFn: (row) => row.supplier_details?.supplierName,
+    id: "supplier",
     header: "Supplier",
   },
   {
@@ -69,17 +71,18 @@ export const columnsIar: ColumnDef<IARShape>[] = [
     header: "Date Received - COA Office",
   },
   {
-    accessorFn: row => row.receivedBy_details.firstName,
+    accessorFn: (row) => row.receivedBy_details?.firstName,
     id: "receivedBy",
     header: "Received By",
   },
   {
-    accessorFn: row => row.submittedBy_details.firstName,
+    accessorFn: (row) => row.submittedBy_details?.firstName,
     id: "submittedBy",
     header: "Submitted By",
   },
   {
-    accessorFn: row => `${row.office_details.officeName} - ${row.office_details.officeAgency.agencyName}` ,
+    accessorFn: (row) =>
+      `${row.office_details?.officeName} - ${row.office_details?.officeAgency.agencyName}`,
     id: "office",
     header: "Office",
   },
@@ -104,13 +107,20 @@ export const columnsIar: ColumnDef<IARShape>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(iar.id)}
+              onClick={() => navigator.clipboard.writeText(iar.id ?? "")}
             >
               Copy IAR ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigate(`${iar.id}`)}>
               View transaction
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={UseDeleteEndpoint(
+                `iar/inspection-acceptance-report/${iar.id}/`
+              )}
+            >
+              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
