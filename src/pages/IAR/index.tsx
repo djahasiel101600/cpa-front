@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { UseGetEndpointData } from "@/services/helpers/GetEndpoints";
 import type { IARShape } from "@/types/core-types";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 import {
   Dialog,
@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 import IARForm from "./Forms/IARForm";
 
@@ -34,20 +34,10 @@ function IAR() {
 
   return (
     <div>
-      <Dialog>
-      <DialogTrigger>
-        <Button>New Entry</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="py-3 text-2xl">Inspection Acceptance Report</DialogTitle>
-          <DialogDescription>
-           <IARForm onSuccess={(isCreated) => isCreated ? toast("Entry created successfully") : toast("Something went wrong while saving")} />
-          </DialogDescription>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
-        <IARDataView iarData={iarData} error={error} />
+      <Button className="float-right" onClick={() => navigate("/iar-form")}>
+        New Entry
+      </Button>
+      <IARDataView iarData={iarData} error={error} />
     </div>
   );
 }

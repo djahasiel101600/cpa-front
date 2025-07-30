@@ -14,29 +14,32 @@ interface ErrorShape {
   isAxiosError: true;
 }
 
-export function UseGetEndpointData<T>(endpoint: string, criteria: boolean | undefined) {
+export function UseGetEndpointData<T>(
+  endpoint: string,
+  criteria: boolean | undefined
+) {
   const [data, setData] = useState<T[]>([]);
   const [error, setError] = useState<ErrorShape>();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const authToken = localStorage.getItem("authToken");
+    const authToken = localStorage.getItem("authToken");
+    setIsLoading(true);
     if (criteria === true) {
-      try {
-        const res = await axios_instance
+      axios_instance
         .get<T[]>(endpoint, {
           headers: {
             Authorization: `Token ${authToken}`,
           },
         })
-        setData(res.data)
-      } catch (error:any) {
-        setError(error);
-      }
+        .then((res) => setData(res.data))
+        .catch((err) => {
+          setError(err as ErrorShape);
+          console.log("Something went wrong: ", error);
+        })
+        .finally(() => setIsLoading(false));
     }
-    }
-    fetchData();
   }, [criteria, endpoint]);
 
-  return { data, error, criteria };
+  return { data, error, criteria, isLoading };
 }

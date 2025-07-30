@@ -20,27 +20,27 @@ import { UseGetEndpointData } from "@/services/helpers/GetEndpoints";
 
 const inboundLinks = [
   {
-    address: "po",
+    address: "/po",
     title: "Purchase Order",
   },
   {
-    address: "iar",
+    address: "/iar",
     title: "Inspection & Acceptance Report",
   },
   {
-    address: "letters",
+    address: "/letters",
     title: "Letters",
   },
   {
-    address: "bankrecon",
+    address: "/bankrecon",
     title: "Bank Recon.",
   },
   {
-    address: "trial-balance",
+    address: "/trial-balance",
     title: "Trial Balance",
   },
   {
-    address: "liquidation-report",
+    address: "/liquidation-report",
     title: "Liquidation Report",
   },
 ];
@@ -64,8 +64,8 @@ export default function Header() {
     }
   }, [selection]);
   return (
-    <nav className="flex flex-col w-[70%]">
-      <div className="flex justify-between items-center gap-2 px-8 py-4 w-full">
+    <nav className="flex flex-col shadow w-full justify-center items-center">
+      <div className="flex justify-between items-center gap-2 px-8 py-4 w-[70%]">
         <div className="flex cursor-pointer" onClick={() => navigate("/")}>
           <SiDwavesystems className="text-3xl" />
           <h2 className="text-3xl">

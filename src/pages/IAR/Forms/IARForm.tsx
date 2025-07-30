@@ -6,6 +6,7 @@ import { UseGetEndpointData } from "@/services/helpers/GetEndpoints";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 import Calendar23 from "@/components/calendar-23";
 
@@ -27,19 +28,32 @@ import type {
 import UsePostEndpoint from "@/services/helpers/PostEndpoints";
 import { useEffect, useState } from "react";
 
+import { FcInspection } from "react-icons/fc";
+
 type FormData = z.infer<typeof IARSchema>;
 interface Props {
-  onSuccess: (isCreated: boolean | false)=>void;
+  onSuccess: (isCreated: boolean | false) => void;
 }
 
-export default function IARForm({onSuccess}:Props) {
+export default function IARForm({ onSuccess }: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(IARSchema),
+    defaultValues: {
+      supplier: "",
+      dateReceivedOfficer: "",
+      dateAcceptance: "",
+      dateInspection: "",
+      dateInvoice: "",
+      receivedBy: "",
+      submittedBy: "",
+      office: "",
+    },
   });
 
   const today = new Date();
@@ -52,7 +66,7 @@ export default function IARForm({onSuccess}:Props) {
 
   const [isPosting, setIsPosting] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>();
-  const { data, error } = UsePostEndpoint(
+  const { data, error, status } = UsePostEndpoint(
     "iar/inspection-acceptance-report/",
     formData,
     isPosting
@@ -63,10 +77,24 @@ export default function IARForm({onSuccess}:Props) {
   };
 
   useEffect(() => {
-    onSuccess(true);
-    console.log(data);
-    console.log(error);
-    console.log(formData);
+    if (status === 201) {
+      console.log("There are no errors");
+      console.log("Data from success post: ", data);
+      onSuccess(true);
+      toast("Entry saved successfully", {
+        description: Date.now().toString(),
+        action: {
+          label: "Close",
+          onClick: () => console.log("Closed"),
+        },
+        position: "top-center",
+      });
+      reset();
+    } else {
+      console.log("An error has occured while saving");
+      onSuccess(false);
+      toast("An error has occured while saving.", { position: "top-center" });
+    }
   }, [data, error]);
 
   const { data: offices = [] } = UseGetEndpointData<OfficeShape>(
@@ -85,78 +113,86 @@ export default function IARForm({onSuccess}:Props) {
   return (
     <>
       <form
-        className="flex flex-col gap-3 items-center w-fit"
+        className="flex flex-col gap-3 items-center mx-8"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col grow w-full gap-5">
+        <div className="flex flex-col grow w-[80%] gap-5">
+          <h1 className="flex items-center text-3xl font-medium">
+            <FcInspection />
+            New IAR Entry
+          </h1>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2 justify-start">
-               <label className="text-[12px] font-medium text-gray-600">
-                    IAR Number
-                </label>
+              <label className="text-[12px] font-medium text-gray-600 flex gap-2">
+                IAR Number
+                {errors.iarNo && (
+                  <p className="text-red-500">{errors.iarNo.message}</p>
+                )}
+              </label>
               <Input
                 {...register("iarNo")}
                 className=""
                 type="text"
                 placeholder="0000-00-000"
               />
-              {errors.iarNo && (
-                <p className="text-red-500">{errors.iarNo.message}</p>
-              )}
             </div>
             <div className="flex flex-col justify-center gap-2">
-                <label className="text-[12px] font-medium text-gray-600">
-                  Date Received - COA
-                </label>
-                <Input
-                  {...register("dateReceivedCoa")}
-                  type="datetime-local"
-                  className="appearance-none text-[16] focus:outline-0  focus:border-b-black focus:border-0 w-fit"
-                />
+              <label className="text-[12px] font-medium text-gray-600 flex gap-2">
+                Date Received - COA
                 {errors.dateReceivedCoa && (
-                  <p className="text-red-500">{errors.dateReceivedCoa.message}</p>
+                  <p className="text-red-500">
+                    {errors.dateReceivedCoa.message}
+                  </p>
                 )}
+              </label>
+              <Input
+                {...register("dateReceivedCoa")}
+                type="datetime-local"
+                className="appearance-none text-[16] focus:outline-0  focus:border-b-black focus:border-0 w-fit"
+              />
             </div>
           </div>
 
           <div className="flex flex-col justify-center gap-2">
-                <label className="text-[12px] font-medium text-gray-600">
-                  Supplier
-                </label>
-                <Controller
-                  name="supplier"
-                  control={control}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Supplier" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Supplier</SelectLabel>
-                          {suppliers.map((supplier) => (
-                            <SelectItem key={supplier.id} value={supplier.id}>
-                              {supplier.supplierName}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {errors.supplier && (
-                  <p className="text-red-500">{errors.supplier.message}</p>
-                )}
+            <label className="text-[12px] font-medium text-gray-600 flex gap-2">
+              Supplier
+              {errors.supplier && (
+                <p className="text-red-500">{errors.supplier.message}</p>
+              )}
+            </label>
+            <Controller
+              name="supplier"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Supplier" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Supplier</SelectLabel>
+                      {suppliers.map((supplier) => (
+                        <SelectItem key={supplier.id} value={supplier.id}>
+                          {supplier.supplierName}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           <div className="flex flex-col flex-wrap gap">
-
-           
-            <div className="grid grid-cols-2 gap-4"> {/* 2 Column Layout Fields */}
-
-              <div className="flex flex-col justify-center gap-2">
-                <label className="text-[12px] font-medium text-gray-600">
+            <div className="flex gap-4">
+              {" "}
+              {/* 2 Column Layout Fields */}
+              <div className="flex flex-col justify-center gap-2 flex-grow">
+                <label className="text-[12px] font-medium text-gray-600 flex gap-2">
                   IAR Date
+                  {errors.iarDate && (
+                    <p className="text-red-500">{errors.iarDate.message}</p>
+                  )}
                 </label>
                 <Input
                   {...register("iarDate")}
@@ -164,65 +200,62 @@ export default function IARForm({onSuccess}:Props) {
                   className="appearance-none text-[16] focus:outline-0 focus:border-0 w-full"
                   defaultValue={defaultDate}
                 />
-                {errors.iarDate && (
-                  <p className="text-red-500">{errors.iarDate.message}</p>
-                )}
               </div>
-
               <div className="flex flex-col justify-center gap-2">
-                <label className="text-[12px] font-medium text-gray-600">
+                <label className="text-[12px] font-medium text-gray-600 flex gap-2">
                   Date Received - Officer
+                  {errors.dateReceivedOfficer && (
+                    <p className="text-red-500">
+                      {errors.dateReceivedOfficer.message}
+                    </p>
+                  )}
                 </label>
                 <Controller
                   name="dateReceivedOfficer"
                   control={control}
-                  render={({field}) => (
+                  render={({ field }) => (
                     <Calendar23 value={field.value} onChange={field.onChange} />
                   )}
-                  />
-                {errors.dateReceivedOfficer && (
-                  <p className="text-red-500">
-                    {errors.dateReceivedOfficer.message}
-                  </p>
-                )}
+                />
               </div>
-
               <div className="flex flex-col justify-center gap-2">
-                <label className="text-[12px] font-medium text-gray-600">
+                <label className="text-[12px] font-medium text-gray-600 flex gap-2">
                   Date of Acceptance
+                  {errors.dateAcceptance && (
+                    <p className="text-red-500">
+                      {errors.dateAcceptance.message}
+                    </p>
+                  )}
                 </label>
                 <Controller
                   name="dateAcceptance"
                   control={control}
-                  render={({field}) => (
+                  render={({ field }) => (
                     <Calendar23 value={field.value} onChange={field.onChange} />
                   )}
-                  />
-                {errors.dateAcceptance && (
-                  <p className="text-red-500">{errors.dateAcceptance.message}</p>
-                )}
+                />
               </div>
-
               <div className="flex flex-col justify-center gap-2">
-                <label className="text-[12px] font-medium text-gray-600">
-                    Date Inspection
-                  </label>
-                  <Controller
-                    name="dateInspection"
-                    control={control}
-                    render={({field}) => (
-                      <Calendar23 value={field.value} onChange={field.onChange} />
-                    )}
-                    />
-                    {errors.dateInspection && (
-                      <p className="text-red-500">{errors.dateInspection.message}</p>
-                    )}
+                <label className="text-[12px] font-medium text-gray-600 flex gap-2">
+                  Date Inspection
+                  {errors.dateInspection && (
+                    <p className="text-red-500">
+                      {errors.dateInspection.message}
+                    </p>
+                  )}
+                </label>
+                <Controller
+                  name="dateInspection"
+                  control={control}
+                  render={({ field }) => (
+                    <Calendar23 value={field.value} onChange={field.onChange} />
+                  )}
+                />
               </div>
-
-            </div> {/* End of 2 Column Layout Fields */}
-
-
-            <div className="flex gap-4 w-full mt-4">{/* 2 Column Layout Fields */}
+            </div>{" "}
+            {/* End of 2 Column Layout Fields */}
+            <div className="flex gap-4 w-full mt-4">
+              {/* 2 Column Layout Fields */}
               <div className="flex flex-col justify-center gap-2 w-full">
                 <label className="text-[12px] font-medium text-gray-600">
                   Sales Invoice
@@ -234,31 +267,36 @@ export default function IARForm({onSuccess}:Props) {
                   placeholder="Sales Invoice No."
                 />
                 {errors.salesInvoiceNo && (
-                  <p className="text-red-500">{errors.salesInvoiceNo.message}</p>
+                  <p className="text-red-500">
+                    {errors.salesInvoiceNo.message}
+                  </p>
                 )}
               </div>
 
               <div className="flex flex-col justify-center gap-2">
-                <label className="text-[12px] font-medium text-gray-600">
+                <label className="text-[12px] font-medium text-gray-600 flex gap-2">
                   Date Invoice
+                  {errors.dateInvoice && (
+                    <p className="text-red-500">{errors.dateInvoice.message}</p>
+                  )}
                 </label>
                 <Controller
                   name="dateInvoice"
                   control={control}
-                  render={({field}) => (
+                  render={({ field }) => (
                     <Calendar23 value={field.value} onChange={field.onChange} />
                   )}
-                  />
-                {errors.dateInvoice && (
-                  <p className="text-red-500">{errors.dateInvoice.message}</p>
-                )}
+                />
               </div>
-            </div> {/* End of 2 Column Layout Fields */}
-
+            </div>{" "}
+            {/* End of 2 Column Layout Fields */}
             <div className="flex gap-4 w-full mt-4">
               <div className="flex flex-col justify-center gap-2 w-full">
-                <label className="text-[12px] font-medium text-gray-600">
+                <label className="text-[12px] font-medium text-gray-600 flex gap-2">
                   Received By
+                  {errors.receivedBy && (
+                    <p className="text-red-500">{errors.receivedBy.message}</p>
+                  )}
                 </label>
                 <Controller
                   name="receivedBy"
@@ -281,14 +319,14 @@ export default function IARForm({onSuccess}:Props) {
                     </Select>
                   )}
                 />
-                {errors.receivedBy && (
-                  <p className="text-red-500">{errors.receivedBy.message}</p>
-                )}
               </div>
 
               <div className="flex flex-col justify-center gap-2 w-full">
-                <label className="text-[12px] font-medium text-gray-600">
+                <label className="text-[12px] font-medium text-gray-600 flex gap-2">
                   Submitted By
+                  {errors.submittedBy && (
+                    <p className="text-red-500">{errors.submittedBy.message}</p>
+                  )}
                 </label>
                 <Controller
                   name="submittedBy"
@@ -311,15 +349,14 @@ export default function IARForm({onSuccess}:Props) {
                     </Select>
                   )}
                 />
-                {errors.submittedBy && (
-                  <p className="text-red-500">{errors.submittedBy.message}</p>
-                )}
               </div>
             </div>
-
             <div className="flex flex-col justify-center gap-2 mt-4">
-              <label className="text-[12px] font-medium text-gray-600">
+              <label className="text-[12px] font-medium text-gray-600 flex gap-2">
                 Office
+                {errors.office && (
+                  <p className="text-red-500">{errors.office.message}</p>
+                )}
               </label>
               <Controller
                 name="office"
@@ -344,11 +381,7 @@ export default function IARForm({onSuccess}:Props) {
                   </Select>
                 )}
               />
-              {errors.office && (
-                <p className="text-red-500">{errors.office.message}</p>
-              )}
             </div>
-
             <div className="flex flex-col justify-center gap-2 align-bottom mt-4">
               <label className="text-[12px] font-medium text-gray-600">
                 Remarks
@@ -362,7 +395,6 @@ export default function IARForm({onSuccess}:Props) {
                 <p className="text-red-500">{errors.remarks.message}</p>
               )}
             </div>
-
           </div>
 
           <div className="flex justify-end my-4">

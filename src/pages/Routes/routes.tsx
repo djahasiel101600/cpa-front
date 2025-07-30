@@ -15,26 +15,31 @@ import IARDataSingleView from "../IAR/DataView/IARDataSingleView";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-function PageRouter({
-  isAuth,
-}: {
-  isAuth: boolean | undefined;
-}) {
-  console.log('IsAuth', isAuth)
+function PageRouter({ isAuth }: { isAuth: boolean | undefined }) {
+  console.log("IsAuth from routes.tsx", isAuth);
+
   return (
     <BrowserRouter>
       <Routes>
         {isAuth ? (
           <Route element={<Navigate to={"/"} replace />} />
         ) : (
-          <Route path="login" element={"Login"} />
+          <Route
+            path="login"
+            element={
+              <LoginForm onLogin={() => localStorage.getItem("authToken")} />
+            }
+          />
         )}
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="rci" element={<RCI />} />
             <Route path="iar" element={<IAR />} />
-            <Route path="iar-form" element={<IARForm onSuccess={(stat) => console.log(stat)} />} />
+            <Route
+              path="iar-form"
+              element={<IARForm onSuccess={(stat) => console.log(stat)} />}
+            />
             <Route path="iar/:id" element={<IARDataSingleView />} />
             <Route path="po" element={<PO />} />
             <Route path="profile" element={<Profile />} />

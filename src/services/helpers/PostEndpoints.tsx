@@ -23,11 +23,11 @@ export default function UsePostEndpoint<T>(
         .then((response) => {
           setData(response.data);
           setStatus(response.status);
-          console.log(response.status);
         })
         .catch((err) => {
           setError(err as ErrorShape);
           console.log(err);
+          setStatus(err.response.status);
         });
     }
   }, [criteria, endpoint]);
