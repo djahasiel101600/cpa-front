@@ -1,4 +1,4 @@
-import PageRouter from "./pages/Routes/routes";
+import PageRouter from "./app/Routes/routes";
 import { useEffect, useState } from "react";
 import { UseGetEndpointData } from "./services/helpers/GetEndpoints";
 

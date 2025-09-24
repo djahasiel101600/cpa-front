@@ -1,17 +1,17 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginForm from "@/pages/Auth/Form/Login";
 import ProtectedRoute from "@/components/core/ProtectedRoute";
-import PageNotFound from "../NotFound/PageNotFound";
-import Layout from "../Layout";
-import Home from "../Home";
-import IAR from "../IAR";
-import PO from "../PO";
-import Logout from "../Auth/Form/Logout";
-import Profile from "../Auth/Profile";
+import PageNotFound from "../../pages/NotFound/PageNotFound";
+import Layout from "../../pages/Layout";
+import Home from "../../pages/Home";
+import IAR from "../../pages/IAR";
+import PO from "../../pages/PO";
+import Logout from "../../pages/Auth/Form/Logout";
+import Profile from "../../pages/Auth/Profile";
 
 import { default as RCI } from "@/pages/RCI";
-import IARForm from "../IAR/Forms/IARForm";
-import IARDataSingleView from "../IAR/DataView/IARDataSingleView";
+import IARForm from "../../pages/IAR/Forms/IARForm";
+import IARDataSingleView from "../../pages/IAR/DataView/IARDataSingleView";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
